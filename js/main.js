@@ -15,6 +15,23 @@ window.onload = function () {
 	  document.getElementById("prev-page").addEventListener("click", session.prevPage);
 	  document.getElementById("next-page").addEventListener("click", session.nextPage);
 
+	  var mousedownTimer; 
+	  document.getElementById("prev-page").addEventListener("mousedown", function (e) {
+	  	mousedownTimer = setInterval(session.prevPage, 100);
+	  });
+
+	  document.getElementById("next-page").addEventListener("mousedown", function (e) {
+	  	mousedownTimer = setInterval(session.nextPage, 100);
+	  });
+
+	  document.getElementById("prev-page").addEventListener("mouseout", clearTimer);
+	  document.getElementById("next-page").addEventListener("mouseout", clearTimer);
+	  document.addEventListener("mouseup", clearTimer);
+
+	  function clearTimer (e) {
+	  	window.clearInterval(mousedownTimer);
+	  }
+
 	} else {
 	   // No local storage support! 
 	   titleBody.innerHTML = "Your browser does not support local storage!" 
@@ -43,6 +60,7 @@ function NoteSession (s) {
 		notebook.addPage(new Note({"title": "Note " + (notebook.pageCount() + 1)}));
 		updateNote();
 		updatePageNumbers();
+		self.sync();
 	}
 
 	this.prevPage = function () {
@@ -60,6 +78,14 @@ function NoteSession (s) {
 		}
 		updateNote();
 		updatePageNumbers();
+	}
+
+	this.goToPage = function (num) {
+		if (num <= notebook.pageCount()) {
+			page = num;
+			updateNote();
+			updatePageNumbers();
+		}
 	}
 
 	this.load = function () {

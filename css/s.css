@@ -24,6 +24,11 @@ body {
 
 a, a:link, a:visited, a:active {
 	text-decoration: none;
+	color:#14A204;
+}
+
+a:hover {
+	color: #4186DF;
 }
 
 .sidebar {
@@ -105,4 +110,6 @@ a, a:link, a:visited, a:active {
 	width: 100%;
 	height: 10%;
 	float: left;
+	font-size: 1.5em;
+	line-height: 2em;
 }
