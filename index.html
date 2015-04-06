@@ -31,15 +31,15 @@
 </div>
 <div class="book" id="note-book">
 	<div class="page" id="note-page">
-		<input class="title input" value="My Notes" id="note-title" />
-		<textarea class="body input" id="note-body" value="Notes is a simple note-taking application that saves your data using your browser's local storage.">Notes is a simple note-taking application that saves your data using your browser's local storage.</textarea>
+		<input class="title saved" value="My Notes" id="note-title" />
+		<textarea class="body saved" id="note-body" value="Notes is a simple note-taking application that saves your data using your browser's local storage.">Notes is a simple note-taking application that saves your data using your browser's local storage.</textarea>
 	</div>
 	<div class="book-nav">
 		<span class="half left">
-			Page 1/1
+			Page <span id="current-page">1</span> / <span id="page-count">1</span>
 		</span> 
 		<span class="half right">
-			<a href="#">&#8592; Prev</a> ....  <a href="#">Next &#8594;</a>
+			<a href="#" id="prev-page">&#8592; Prev</a> ....  <a href="#" id="next-page">Next &#8594;</a>
 		</span>
 	</div>
 </div>

@@ -6,11 +6,14 @@ window.onload = function () {
 		
 
 		// Add event handlers for syncing.
-	  var inputs = document.getElementsByClassName("input");
+	  var inputs = document.getElementsByClassName("saved");
 	  for (var i = 0; i < inputs.length; i++) {
 	  	inputs[i].addEventListener("change", session.sync);
 	  	inputs[i].addEventListener("click", session.sync);
 	  }
+
+	  document.getElementById("prev-page").addEventListener("click", session.prevPage);
+	  document.getElementById("next-page").addEventListener("click", session.nextPage);
 
 	} else {
 	   // No local storage support! 
@@ -20,6 +23,7 @@ window.onload = function () {
 }
 
 function NoteSession (s) {
+	var self = this;
 	var storage = s;
 	var notebook = new Notebook(); 
 	var page = 1; 
@@ -35,6 +39,29 @@ function NoteSession (s) {
 		storage.page = page;
 	}
 
+	this.addPage = function () {
+		notebook.addPage(new Note({"title": "Note " + (notebook.pageCount() + 1)}));
+		updateNote();
+		updatePageNumbers();
+	}
+
+	this.prevPage = function () {
+		if (page > 1) {
+			page--;
+		}
+		updateNote();
+		updatePageNumbers();
+	}
+
+	this.nextPage = function () {
+		page++;
+		if (page > notebook.pageCount()) {
+			self.addPage();
+		}
+		updateNote();
+		updatePageNumbers();
+	}
+
 	this.load = function () {
 		if (storage.notebook) {
 			page = storage.page * 1;
@@ -45,20 +72,34 @@ function NoteSession (s) {
 				page = 1;
 			}
 
-			setText(notebook.getPageContent(page));
-			setTitle(notebook.getPageTitle(page));
+			setText();
+			setTitle();
 		} else {
 			notebook = new Notebook({"title": "Default Notebook"});
 			notebook.addPage(new Note({"title": getTitle(), "content": getText()}));
 		}
+
+		updatePageNumbers();
 	}
 
-	function setText (text) {
+	function updatePageNumbers () {
+		document.getElementById("current-page").innerHTML = page;
+		document.getElementById("page-count").innerHTML = notebook.pageCount();
+	}
+
+	function updateNote () {
+		setTitle();
+		setText();
+	}
+
+	function setText () {
+		var text = notebook.getPageContent(page);
 		textBody.value = text;
 		textBody.innerHTML = text;
 	}
 
 	function setTitle (title) {
+		var title = notebook.getPageTitle(page);
 		titleBody.value = title;
 	}
 
