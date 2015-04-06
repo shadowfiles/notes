@@ -9,6 +9,7 @@
 <meta http-equiv="Content-Language" content="en-us" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-16" />
 
+<script src="js/note.js" type="text/javascript"></script>
 <script src="js/main.js" type="text/javascript"></script>
 <link href='http://fonts.googleapis.com/css?family=Acme' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
@@ -16,10 +17,30 @@
 
 </head>
 <body>
+<div class="sidebar" id="leftbar">
+	<div>
+		Note 1
+	</div>
+	<div>
+		Note 2
+	</div>
+</div>
+
+<div class="sidebar" id="rightbar">
+	Styling options go here.
+</div>
 <div class="book" id="note-book">
 	<div class="page" id="note-page">
-		<input class="title" value="My Notes" id="note-title" />
-		<textarea class="body" id="note-body" value="Notes is a simple note-taking application that saves your data using your browser's local storage.">Notes is a simple note-taking application that saves your data using your browser's local storage.</textarea>
+		<input class="title input" value="My Notes" id="note-title" />
+		<textarea class="body input" id="note-body" value="Notes is a simple note-taking application that saves your data using your browser's local storage.">Notes is a simple note-taking application that saves your data using your browser's local storage.</textarea>
+	</div>
+	<div class="book-nav">
+		<span class="half left">
+			Page 1/1
+		</span> 
+		<span class="half right">
+			<a href="#">&#8592; Prev</a> ....  <a href="#">Next &#8594;</a>
+		</span>
 	</div>
 </div>
 </body>
