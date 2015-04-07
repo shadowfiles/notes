@@ -54,34 +54,37 @@ function NoteSession (s) {
 
 		storage.notebook = notebook.serialize();
 		storage.page = page;
+
+		updateNoteListing(page);
 	}
 
 	this.addPage = function () {
 		notebook.addPage(new Note({"title": "Note " + (notebook.pageCount() + 1)}));
 		updateNote();
 		updatePageNumbers();
+		updateNoteList();
 		self.sync();
 	}
 
 	this.prevPage = function () {
 		if (page > 1) {
-			page--;
+			self.goToPage(page - 1);
 		}
-		updateNote();
-		updatePageNumbers();
 	}
 
 	this.nextPage = function () {
-		page++;
-		if (page > notebook.pageCount()) {
+		if (page === notebook.pageCount()) {
 			self.addPage();
 		}
-		updateNote();
-		updatePageNumbers();
+		if (page < notebook.pageCount()) {
+			self.goToPage(page + 1);
+		}
 	}
 
 	this.goToPage = function (num) {
-		if (num <= notebook.pageCount()) {
+		if (num <= notebook.pageCount() && num > 0) {
+			deselectNoteListing(page);
+			selectNoteListing(num);
 			page = num;
 			updateNote();
 			updatePageNumbers();
@@ -97,18 +100,24 @@ function NoteSession (s) {
 				notebook.addPage(new Note({"title": getTitle(), "content": getText()}));
 				page = 1;
 			}
-
-			setText();
-			setTitle();
 		} else {
 			notebook = new Notebook({"title": "Default Notebook"});
 			notebook.addPage(new Note({"title": getTitle(), "content": getText()}));
 		}
+		$("#note-list").jScrollPane();
+		updateNoteList();
+		self.goToPage(page);
+	}
 
+	function updateAll () {
 		updatePageNumbers();
+		updateNote();
+		updateNoteList();
 	}
 
 	function updatePageNumbers () {
+		document.getElementById("prev-page").setAttribute("href", "#note-" + (page - 1));
+		document.getElementById("next-page").setAttribute("href", "#note-" + (page + 1));
 		document.getElementById("current-page").innerHTML = page;
 		document.getElementById("page-count").innerHTML = notebook.pageCount();
 	}
@@ -116,6 +125,40 @@ function NoteSession (s) {
 	function updateNote () {
 		setTitle();
 		setText();
+	}
+
+	function updateNoteListing (num) {
+		var note = document.getElementById("note-" + num);
+		note.innerHTML = notebook.getPageTitle(num);
+	}
+
+	function selectNoteListing (num) {
+		var note = document.getElementById("note-" + num);
+		note.setAttribute("class", "selected");
+	}
+
+	function deselectNoteListing (num) {
+		var note = document.getElementById("note-" + num);
+		note.setAttribute("class", "");
+	}
+
+	function updateNoteList () {
+		$("#note-list").data("jsp").destroy();
+		var list = document.getElementById("note-list");
+		list.innerHTML = "";
+		for (var i = 1; i <= notebook.pageCount(); i++) {
+			var title = notebook.getPageTitle(i);
+			var link = document.createElement("a");
+			link.setAttribute("href", "#note-" + i);
+			link.setAttribute("id", "note-" + i);
+			link.setAttribute("page", i);
+			link.innerHTML = title;
+			link.addEventListener("click", function (e) {
+				self.goToPage(this.getAttribute("page") * 1);
+			});
+			list.appendChild(link);
+		}
+		$("#note-list").jScrollPane();
 	}
 
 	function setText () {
